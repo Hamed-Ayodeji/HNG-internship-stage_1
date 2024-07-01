@@ -55,13 +55,22 @@ do
   else
     # Generate a random password
     password=$(generate_password)
-    # Create the user with the generated password
-    useradd -m -p "$password" "$username"
+    # Encrypt the password
+    encrypted_password=$(openssl passwd -crypt "$password")
+    # Create the user with the encrypted password
+    useradd -m -p "$encrypted_password" "$username"
     echo "User $username created with password: $password"
+    # Check if the group exists, if not, create the group
+    if ! getent group "$group" > /dev/null 2>&1; then
+      groupadd "$group"
+      echo "Group $group created."
+    fi
     # Add the user to the specified group
     usermod -aG "$group" "$username"
     echo "User $username added to group $group"
-    # Store the username and password in the password file
+    # Store the username and encrypted password in the password file
     echo "$username:$password" >> "$password_file"
   fi
 done < "$user_file"
+
+echo "################# User creation process completed successfully."

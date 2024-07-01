@@ -4,7 +4,8 @@
 echo "################# Checking if the script is being run as root..."
 if [[ "$(id -u)" -ne 0 ]]; then
   echo "This script needs to be run as root. Trying to elevate privileges..."
-  exec sudo -E "$0" "$@"
+  sudo -E "$0" "$@"
+  exit
 fi
 
 # Step 2: Create the log and password files and set appropriate permissions

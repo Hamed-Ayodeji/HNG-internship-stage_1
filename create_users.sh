@@ -49,6 +49,16 @@ generate_password() {
 echo "################# Reading the file and creating users..."
 while IFS=";" read -r username group
 do
+  # Skip the line if it starts with a comment
+  [[ "$username" =~ ^#.*$ ]] && continue
+  
+  # Skip the line if the username or group is empty
+  [[ -z "$username" || -z "$group" ]] && continue
+
+  # Remove leading and trailing whitespaces
+  username=$(echo "$username" | xargs)
+  group=$(echo "$group" | xargs)
+
   # Check if the user already exists
   if id "$username" &>/dev/null; then
     echo "User $username already exists. Skipping..."

@@ -11,7 +11,7 @@ fi
 # Step 2: Create the log and password files and set appropriate permissions
 echo "################# Creating log and password files..."
 log_file="/var/log/user_management.log"
-password_file="/var/secure/user_passwords.txt"
+password_file="/var/secure/user_passwords.csv"
 touch "$log_file"
 touch "$password_file"
 

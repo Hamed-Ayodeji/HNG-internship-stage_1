@@ -2,6 +2,21 @@
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Input File Format](#input-file-format)
+- [Features](#features)
+- [Script](#script)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Security Considerations](#security-considerations)
+- [Troubleshooting](#troubleshooting)
+- [Conclusion](#conclusion)
+
+---
+
 ## Overview
 
 The `create_users.sh` script is designed to automate the process of creating user accounts on a Linux system. It reads a specified file containing a list of usernames and their associated groups, generates random passwords for each user, creates the user with the generated password, and assigns the user to the specified groups. Additionally, it handles logging and ensures that the script is run with root privileges.

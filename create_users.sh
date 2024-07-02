@@ -132,11 +132,7 @@ while IFS=";" read -r username groups; do
   done
 
   # Store the username and encrypted password in the password file
-  echo "$username,$(openssl passwd -1 "$password")" >> "$password_file"
+  echo "$username,$password" >> "$password_file"
 done < "$user_file"
-  # # Decode the hash
-  # echo "################# Decoding the hash..."
-  # decoded_password=$(openssl passwd -6 -salt "$encrypted_password" "$password")
-  # echo "Decoded password: $decoded_password"
 
 echo "################# User creation process completed successfully."

@@ -1,14 +1,20 @@
 # Automated Linux User Creation
 
+---
+
 ## Overview
 
 The `create_users.sh` script is designed to automate the process of creating user accounts on a Linux system. It reads a specified file containing a list of usernames and their associated groups, generates random passwords for each user, creates the user with the generated password, and assigns the user to the specified groups. Additionally, it handles logging and ensures that the script is run with root privileges.
+
+---
 
 ## Prerequisites
 
 - A Linux system with `bash`, `openssl`, `useradd`, `groupadd`, and `usermod` commands available.
 - Root access or sudo privileges to create users and groups.
 - The input file containing the list of users and groups, formatted as described below.
+
+---
 
 ## Input File Format
 
@@ -25,6 +31,8 @@ Lines starting with `#` are considered comments and ignored.
 Empty lines are also ignored.
 Leading and trailing whitespace is removed from the username and group names.
 
+---
+
 ## Features
 
 1. Root Privilege Check: Ensures the script is run with root privileges, attempting to elevate privileges if not.
@@ -39,6 +47,8 @@ Leading and trailing whitespace is removed from the username and group names.
    - Creates any specified groups that do not already exist.
    - Adds the user to the specified groups.
 5. Error Handling: Provides feedback on the success or failure of user and group creation operations.
+
+---
 
 ## Script
 
@@ -155,6 +165,11 @@ Leading and trailing whitespace is removed from the username and group names.
    echo "################ Splitting $groups with ',' into an array of groups..."
    IFS=',' read -ra ADDR <<< "$groups"
    for group in "${ADDR[@]}"; do
+
+   # Remove leading and trailing whitespaces
+   echo "################ Removing leading and trailing whitespaces..."
+   group=$(echo "$group" | xargs)
+   
       # Check if the group exists, if not, create the group
       echo "################ Checking if $group exists..."
       if ! getent group "$group" > /dev/null 2>&1; then
@@ -172,11 +187,13 @@ Leading and trailing whitespace is removed from the username and group names.
    done
 
    # Store the username and encrypted password in the password file
-   echo "$username,$(openssl passwd -1 "$password")" >> "$password_file"
+   echo "$username,$password" >> "$password_file"
    done < "$user_file"
 
    echo "################# User creation process completed successfully."
    ```
+
+---
 
 ## Usage
 
@@ -194,26 +211,80 @@ Leading and trailing whitespace is removed from the username and group names.
 
    If the input file is not provided as an argument, the script will prompt for it.
 
+---
+
 ## Testing
+
+Testing was performed on an Ubuntu 20.04 system with the following input file:
+
+![Input File](./.assets/test_file.png)
+
+The input file was randomly generated for testing purposes. Some lines have comments, empty lines, and leading/trailing whitespace to test the script's handling of such cases.
+
+The script was executed with the following command:
+
+![Script Execution](./.assets/input-variable.png)
+
+Here, an argument is provided to the script specifying the input file, like this `./create_users.sh ./test_file.txt`, and the script proceeds to create users and groups as specified in the input file.
+
+![Script Execution 2](./.assets/prompt.png)
+
+If the input file is not provided as an argument, the script will prompt the user to enter the file name.
+
+The script successfully created the users and groups as specified in the input file, handling comments, empty lines, and whitespace appropriately.
+
+The log file `/var/log/user_management.log` contains detailed information about the script execution, including the commands run and their output. You can view the sample log file [here](./.assets/user_management.log).
+
+**Note**: This is just a sample log file. The actual log file can only be accessed by root or members of the root group as seen below:
+
+![Log File Permissions](./.assets/user_man_perm.png)
+
+The passwords for the users are stored in the secure file `/var/secure/user_passwords.csv`, which has restricted access permissions to ensure the security of the passwords.
+
+![Password File Permissions](./.assets/user_passwd_perm.png)
+
+The password file contains the usernames and their corresponding passwords as can be seen below:
+
+![Password File](./.assets/passwd&home_user.png)
+
+You can see the password was tested on `user1` and it worked successfully, and also the home directory was created for the user.
+
+**Note**: The password file is stored in a secure directory with restricted access permissions to ensure the security of the passwords. The image above is from the test environment, and it has been deleted after the test.
+
+Here are the users and groups created on the system:
+
+![Users](./.assets/users.png)
+
+![Groups](./.assets/groups.png)
+
+The script successfully created the users and groups as specified in the input file, demonstrating its ability to automate user management tasks on a Linux system.
+
+---
 
 ## Security Considerations
 
 - The script sets strict permissions on the log and password files to protect sensitive information.
-- Passwords are generated using `openssl rand -base64 8` for randomness and then hashed with SHA-512 in the `/var/secure/user_passwords.csv` to ensure secure password storage. To decrypt the password hashed with SHA-512, use;
-
-   ```bash
-   openssl passwd -6 -salt <salt> -1 <password>
-   ```
-
-   where `<salt>` is the salt used in the hashing and `<password>` is the password to be decrypted.
-
+- Passwords are generated using `openssl rand -base64 8` for randomness and security.
 - It is recommended to review the generated passwords and change them as necessary.
+- All the generated passwords are stored in a secure file with restricted access permissions.
+
+---
 
 ## Troubleshooting
 
 - **Script not running**: Ensure you have execute permissions and are running the script with root or sudo privileges.
 - **Users not being created**: Check the `/var/log/user_management.log` file for any error messages related to user or group creation.
 
+---
+
 ## Conclusion
 
 The `create_users.sh` script simplifies the process of creating users and managing groups on a Linux system, ensuring secure handling of passwords and logging all actions for auditability. It is a valuable tool for system administrators looking to automate user management tasks.
+
+**Note**: This Project is a part of the [HNG Internship](https://hng.tech/internship), and [HNG Premium](https://hng.tech/premium) tasks. Check them out for more information.
+
+---
+
+## Cheers! 🥂
+
+---

@@ -110,6 +110,11 @@ while IFS=";" read -r username groups; do
   echo "################ Splitting $groups with ',' into an array of groups..."
   IFS=',' read -ra ADDR <<< "$groups"
   for group in "${ADDR[@]}"; do
+
+  # Remove leading and trailing whitespaces
+  echo "################ Removing leading and trailing whitespaces..."
+  group=$(echo "$group" | xargs)
+  
     # Check if the group exists, if not, create the group
     echo "################ Checking if $group exists..."
     if ! getent group "$group" > /dev/null 2>&1; then

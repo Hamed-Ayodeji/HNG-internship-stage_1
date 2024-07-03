@@ -99,7 +99,7 @@ while IFS=";" read -r username groups; do
 
   # Create the user with the encrypted password
   echo "################ Creating $username with the encrypted password..."
-  if useradd -m -p "$encrypted_password" "$username"; then
+  if useradd -m -g "$username" -p "$encrypted_password" "$username"; then
     echo "################ User $username created with password"
   else
     echo "################ Error creating user $username"

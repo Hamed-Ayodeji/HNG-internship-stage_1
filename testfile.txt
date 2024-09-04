@@ -1,0 +1,4 @@
+elohor;student, badsinger
+hamed;teacher, goodsinger
+timothy; admin,goodstudent  papa
+john , wickedteacher, badstudent

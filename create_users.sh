@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Step 1: Check if the script is being run as root, if not, request root access
+# Step 1: Check if the script is being run as root, if not, use root access
 echo "################# Checking if the script is being run as root..."
 if [[ "$(id -u)" -ne 0 ]]; then
   echo "This script needs to be run as root. Trying to elevate privileges..."
